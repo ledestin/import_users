@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   belongs_to :reports_to_user, class_name: 'User', foreign_key: :parent_id
 
-  validates :email_address, email: true
+  validates :email_address, email: true, allow_blank: true
 
   def self.from_array user
     email, first, last = *user
