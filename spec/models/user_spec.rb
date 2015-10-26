@@ -55,5 +55,13 @@ describe User do
       expect(manager).not_to be_nil
       expect(user.parent_id).to eq manager.id
     end
+
+    context 'validates' do
+      it 'email' do
+        user = User.new email_address: invalid_email
+        expect(user).not_to be_valid
+        expect(user.errors.messages[:email_address]).not_to be_nil
+      end
+    end
   end
 end
