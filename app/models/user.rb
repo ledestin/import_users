@@ -1,16 +1,17 @@
 class User < ActiveRecord::Base
   belongs_to :reports_to_user, class_name: 'User', foreign_key: :parent_id
 
-  def self.import_user user
+  def self.from_array user
     email, first, last = *user
-    User.create! email_address: email, first_name: first, last_name: last
+    User.new email_address: email, first_name: first, last_name: last
   end
 
   def self.import_users users
     unfinished_users = {}
 
     users.each do |user|
-      u = import_user user
+      u = from_array user
+      u.save!
 
       _email, _first, _last, manager_email = *user
       unfinished_users[u] = manager_email if manager_email
