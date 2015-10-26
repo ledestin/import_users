@@ -12,23 +12,27 @@ class User < ActiveRecord::Base
     problem_users, unfinished_users = [], {}
 
     users.each do |user|
-      begin
-        u = from_array user
-        u.save!
-
+      u = from_array user
+      unless u.save
+        problem_users << u
+      else
         _email, _first, _last, manager_email = *user
         unfinished_users[u] = manager_email if manager_email
-      rescue ActiveRecord::RecordInvalid
-        problem_users << u
       end
     end
 
     unfinished_users.each do |user, manager_email|
-      next unless manager = User.find_by_email_address(manager_email)
-
-      user.update_attribute :parent_id, manager.id
+      add_parent_id user, manager_email
     end
 
     problem_users
+  end
+
+  private
+
+  def self.add_parent_id user, manager_email
+    return unless manager = User.find_by_email_address(manager_email)
+
+    user.update_attribute :parent_id, manager.id
   end
 end
