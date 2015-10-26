@@ -4,6 +4,7 @@ describe User do
   let(:invalid_email) { 'lala.com' }
 
   let(:user_without_manager) { ['a@example.com', 'John', 'Doe'] }
+  let(:user_without_manager2) { ['b@example.com', 'John', 'Doe'] }
   let(:manager) { ['manager@example.com', 'Mike', 'Bolton'] }
   let(:user_with_manager) do
     ['user@example.com', 'John', 'Doe', manager.first]
@@ -54,6 +55,11 @@ describe User do
       expect(user).not_to be_nil
       expect(manager).not_to be_nil
       expect(user.parent_id).to eq manager.id
+    end
+
+    it 'imports 2 users w/o managers' do
+      User.import_users [user_without_manager, user_without_manager2]
+      expect(User.count).to eq 2
     end
 
     context 'validatations:' do
