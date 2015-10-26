@@ -1,11 +1,14 @@
 require 'rails_helper'
 
 describe User do
+  let(:invalid_email) { 'lala.com' }
+
   let(:user_without_manager) { ['a@example.com', 'John', 'Doe'] }
   let(:manager) { ['manager@example.com', 'Mike', 'Bolton'] }
   let(:user_with_manager) do
     ['user@example.com', 'John', 'Doe', manager.first]
   end
+  let(:user_with_invalid_email) { [invalid_email, 'John', 'Doe'] }
 
   describe '.from_array' do
     it 'creates new user that has no manager' do
@@ -28,6 +31,21 @@ describe User do
   end
 
   describe '.import_users' do
+    context 'returns array:' do
+      it 'empty if there are no errors' do
+        problem_users = User.import_users [user_without_manager]
+        expect(problem_users).to be_an_instance_of(Array)
+        expect(problem_users).to be_empty
+      end
+
+      it 'contains active records if there are errors' do
+        problem_users = User.import_users [user_with_invalid_email]
+        expect(problem_users.size).to eq 1
+        expect(problem_users.first).to be_an_instance_of(User)
+        expect(problem_users.first).not_to be_valid
+      end
+    end
+
     it 'imports user and their manager' do
       User.import_users [user_with_manager, manager]
 
