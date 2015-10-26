@@ -64,7 +64,7 @@ describe User do
       end
 
       it 'email_address is required' do
-        user = User.new first_name: 'John'
+        user = User.new
         expect(user).to be_invalid
         expect(user.errors.messages[:email_address]).not_to be_nil
       end
