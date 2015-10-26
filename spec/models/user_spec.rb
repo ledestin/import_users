@@ -5,7 +5,9 @@ describe User do
 
   describe '.import_user' do
     it 'imports top-level user' do
-      user = User.import_user user_without_manager
+      User.import_user user_without_manager
+
+      user = User.find_by_email_address('a@example.com')
       expect(user.email_address).to eq 'a@example.com'
       expect(user.first_name).to eq 'John'
       expect(user.last_name).to eq 'Doe'
