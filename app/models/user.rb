@@ -9,12 +9,12 @@ class User < ActiveRecord::Base
   end
 
   def self.import_users users
-    problem_users, unfinished_users = [], {}
+    invalid_users, unfinished_users = [], {}
 
     users.each do |user|
       u = from_array user
       unless u.save
-        problem_users << u
+        invalid_users << u
       else
         _email, _first, _last, manager_email = *user
         unfinished_users[u] = manager_email if manager_email
@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
       add_parent_id user, manager_email
     end
 
-    problem_users
+    invalid_users
   end
 
   private
