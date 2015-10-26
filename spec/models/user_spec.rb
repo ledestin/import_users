@@ -63,24 +63,15 @@ describe User do
         expect(user.errors.messages[:email_address]).not_to be_nil
       end
 
-      it 'email_address is not required' do
+      it 'email_address is required' do
         user = User.new first_name: 'John'
-        expect(user).to be_valid
+        expect(user).to be_invalid
+        expect(user.errors.messages[:email_address]).not_to be_nil
       end
 
-      context 'some user info must be present' do
-        it "or isn't vaild when none" do
-          user = User.new
-          expect(user).not_to be_valid
-          expect(user.errors.messages[:email_address]).not_to be_nil
-        end
-
-        %i(email_address first_name last_name).each do |attr|
-          it "is valid if #{attr} is present" do
-            user = User.new attr => 'a@example.com'
-            expect(user).to be_valid
-          end
-        end
+      it 'first_name and last_name are not required' do
+        user = User.new email_address: 'a@example.com'
+        expect(user).to be_valid
       end
     end
   end
