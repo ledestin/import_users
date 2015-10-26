@@ -5,7 +5,8 @@ describe User do
 
   let(:user_without_manager) { ['a@example.com', 'John', 'Doe'] }
   let(:user_without_manager2) { ['b@example.com', 'John', 'Doe'] }
-  let(:manager) { ['manager@example.com', 'Mike', 'Bolton'] }
+  let(:manager) { ['manager@example.com', 'Mike', 'Bolton', 'ceo@example.com'] }
+  let(:ceo) { ['ceo@example.com', 'Peter', 'Gibbons'] }
   let(:user_with_manager) do
     ['user@example.com', 'John', 'Doe', manager.first]
   end
@@ -55,6 +56,20 @@ describe User do
       expect(user).not_to be_nil
       expect(manager).not_to be_nil
       expect(user.parent_id).to eq manager.id
+    end
+
+    it 'imports user, manager and CEO' do
+      User.import_users [user_with_manager, manager, ceo]
+
+      user = User.find_by_email_address 'user@example.com'
+      manager = User.find_by_email_address 'manager@example.com'
+      ceo = User.find_by_email_address 'ceo@example.com'
+      expect(user).not_to be_nil
+      expect(manager).not_to be_nil
+      expect(ceo).not_to be_nil
+      expect(user.parent_id).to eq manager.id
+      expect(manager.parent_id).to eq ceo.id
+      expect(ceo.parent_id).to be_nil
     end
 
     it 'imports 2 users w/o managers' do
