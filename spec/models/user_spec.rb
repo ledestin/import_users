@@ -56,7 +56,7 @@ describe User do
       expect(user.parent_id).to eq manager.id
     end
 
-    context 'validates that' do
+    context 'validatations:' do
       it 'email_address is valid' do
         user = User.new email_address: invalid_email
         expect(user).not_to be_valid
@@ -66,6 +66,21 @@ describe User do
       it 'email_address is not required' do
         user = User.new first_name: 'John'
         expect(user).to be_valid
+      end
+
+      context 'some user info must be present' do
+        it "or isn't vaild when none" do
+          user = User.new
+          expect(user).not_to be_valid
+          expect(user.errors.messages[:email_address]).not_to be_nil
+        end
+
+        %i(email_address first_name last_name).each do |attr|
+          it "is valid if #{attr} is present" do
+            user = User.new attr => 'a@example.com'
+            expect(user).to be_valid
+          end
+        end
       end
     end
   end

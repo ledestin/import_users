@@ -2,6 +2,11 @@ class User < ActiveRecord::Base
   belongs_to :reports_to_user, class_name: 'User', foreign_key: :parent_id
 
   validates :email_address, email: true, allow_blank: true
+  validates_each :email_address do |record, attr, value|
+    next if [record.email_address, record.first_name,
+             record.last_name].any?(&:present?)
+    record.errors.add attr, 'At least email should be present'
+  end
 
   def self.from_array user
     email, first, last = *user
