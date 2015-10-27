@@ -8,16 +8,16 @@ class User < ActiveRecord::Base
     User.new email_address: email, first_name: first, last_name: last
   end
 
-  def self.import_users users
+  def self.import_users user_arrays
     invalid_users, managed_users = [], {}
 
-    users.each do |user|
-      u = from_array user
-      unless u.save
-        invalid_users << u
+    user_arrays.each do |user_array|
+      user = from_array user_array
+      unless user.save
+        invalid_users << user
       else
-        _email, _first, _last, manager_email = *user
-        managed_users[u] = manager_email if manager_email
+        _email, _first, _last, manager_email = *user_array
+        managed_users[user] = manager_email if manager_email
       end
     end
 
