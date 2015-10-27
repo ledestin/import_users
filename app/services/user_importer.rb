@@ -10,8 +10,10 @@ class UserImporter
   end
 
   def call
-    @user_arrays.each { |user_array| save_or_mark_as_invalid user_array }
-    add_parent_id_to_saved_users
+    User.transaction do
+      @user_arrays.each { |user_array| save_or_mark_as_invalid user_array }
+      add_parent_id_to_saved_users
+    end
 
     @invalid_users
   end
