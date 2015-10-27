@@ -12,26 +12,6 @@ describe User do
   end
   let(:user_with_invalid_email) { [invalid_email, 'John', 'Doe'] }
 
-  describe '.from_array' do
-    it 'creates new user that has no manager' do
-      user = User.from_array user_without_manager
-
-      expect(user.email_address).to eq 'a@example.com'
-      expect(user.first_name).to eq 'John'
-      expect(user.last_name).to eq 'Doe'
-      expect(user.parent_id).to be_nil
-    end
-
-    it 'creates new user that has manager' do
-      user = User.from_array user_with_manager
-
-      expect(user.email_address).to eq 'user@example.com'
-      expect(user.first_name).to eq 'John'
-      expect(user.last_name).to eq 'Doe'
-      expect(user.parent_id).to be_nil
-    end
-  end
-
   describe '.import_users' do
     context 'returns array:' do
       it 'empty if there are no errors' do
