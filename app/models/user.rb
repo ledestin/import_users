@@ -3,8 +3,8 @@ class User < ActiveRecord::Base
 
   validates :email_address, email: true
 
-  def self.from_array user
-    email, first, last = *user
+  def self.from_array user_array
+    email, first, last = *user_array
     User.new email_address: email, first_name: first, last_name: last
   end
 
